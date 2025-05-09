@@ -41,7 +41,7 @@ or
 yarn dev
 ```
 
-This will typically open the application in your default web browser at `http://localhost:5173`.
+This will typically open the application in your default web browser at `http://localhost:3035`.
 
 ## Technologies Used
 
