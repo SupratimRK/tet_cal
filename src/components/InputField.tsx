@@ -52,7 +52,7 @@ export const InputField = ({
       >
         <input
           type="number"
-          value={value}
+          value={value === 0 ? '' : value} // Leave empty when 0, removing leading zeros
           onChange={(e) => {
             const newValue = e.target.value === '' ? 0 : parseFloat(e.target.value);
             if (!isNaN(newValue)) {
@@ -64,7 +64,13 @@ export const InputField = ({
             }
           }}
           onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onBlur={(e) => {
+            setIsFocused(false);
+            // When the field is empty and loses focus, ensure the value is set to 0 in the state
+            if (e.target.value === '' && !disabled) {
+              onChange(0);
+            }
+          }}
           disabled={disabled}
           className={`block w-full rounded-md focus:outline-none ${
             disabled 

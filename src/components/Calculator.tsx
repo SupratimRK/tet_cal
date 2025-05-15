@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CalculatorForm } from './CalculatorForm';
 import { ResultCard } from './ResultCard';
 import { CalculationHistory } from './CalculationHistory';
@@ -6,6 +6,8 @@ import { calculateWeightage } from '../utils/calculations';
 import { FormDataType, HistoryItemType } from '../types';
 
 export const Calculator = () => {
+  const resultSectionRef = useRef<HTMLDivElement>(null);
+  
   const [formData, setFormData] = useState<FormDataType>({
     mpFullMarks: 700,
     mpObtainMarks: 0,
@@ -72,6 +74,11 @@ export const Calculator = () => {
       resultWeightage: result.resultWeightage
     };
     setHistory(prev => [historyItem, ...prev]);
+    
+    // Scroll to the result section after calculation with a slight delay to ensure rendering
+    setTimeout(() => {
+      resultSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const handleSaveCalculation = (name: string) => {
@@ -94,6 +101,11 @@ export const Calculator = () => {
     setFormData(item.data);
     setActiveTab('calculator');
     setShowResult(true); // Show result when loading from history
+    
+    // Scroll to the result section after loading with a slight delay to ensure rendering
+    setTimeout(() => {
+      resultSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const handleClearForm = () => {
@@ -181,10 +193,12 @@ export const Calculator = () => {
                 calculationDisabled={calculationDisabled}
               />
               {showResult && ( // Conditionally render ResultCard based on showResult state
-                <ResultCard 
-                  resultWeightage={formData.resultWeightage} 
-                  formData={formData} 
-                />
+                <div ref={resultSectionRef}>
+                  <ResultCard 
+                    resultWeightage={formData.resultWeightage} 
+                    formData={formData} 
+                  />
+                </div>
               )}
             </div>
           ) : (
